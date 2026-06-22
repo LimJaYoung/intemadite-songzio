@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SONGZIO Polyptych Runway Galerie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: "Hanken Grotesk", Arial, sans-serif;
+      --font-mono: "IBM Plex Mono", monospace;
+      --color-black: #030303;
+      --color-white: #fff;
+      --color-silver: #b1b3c3;
+      --container-max: 1640px;
+      --side: clamp(40px, 2.7777777778vw, 53.333px);
+      --grid-gap: clamp(20px, 1.3888888889vw, 26.667px);
+      --ease-out: cubic-bezier(.16, 1, .3, 1);
+      --slow: .75s;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--color-black); color: var(--color-white); scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      background: var(--color-black);
+      color: var(--color-white);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    body::-webkit-scrollbar { display: none; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    p, h1, h2, h3 { margin: 0; }
+
+    .site {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      overflow: visible;
+      background: var(--color-black);
+    }
+
+    main,
+    main > section {
+      width: 100%;
+    }
+
+    .topbar {
+      position: fixed;
+      z-index: 30;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 56px;
+      padding: 20px var(--side) 0;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      mix-blend-mode: difference;
+    }
+
+    .topbar a,
+    .topbar span {
+      pointer-events: auto;
+      font-size: 16px;
+      line-height: 20px;
+      letter-spacing: -.96px;
+      text-transform: uppercase;
+      color: var(--color-white);
+    }
+
+    .chapters {
+      position: fixed;
+      z-index: 32;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 32px;
+      padding: 0 var(--side);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: end;
+      mix-blend-mode: difference;
+      pointer-events: none;
+    }
+
+    .chapters a {
+      pointer-events: auto;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 18px;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--color-white);
+    }
+
+    .entry {
+      min-height: 100svh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-black);
+      padding: 20px var(--side);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .entry::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(3, 3, 3, .68) 0%, rgba(3, 3, 3, .22) 40%, rgba(3, 3, 3, .8) 100%),
+        radial-gradient(circle at 50% 32%, rgba(255, 255, 255, .14), transparent 38%);
+      pointer-events: none;
+    }
+
+    .entry__media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(1) contrast(1.18) brightness(.7);
+      transform: scale(1.02);
+    }
+
+    .entry__logo {
+      position: absolute;
+      z-index: 2;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: clamp(94px, 10.8vw, 208px);
+      line-height: .76;
+      letter-spacing: -9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .entry__sound {
+      position: absolute;
+      z-index: 2;
+      top: 224px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      line-height: 20px;
+      letter-spacing: -.96px;
+    }
+
+    .entry__menu {
+      position: absolute;
+      z-index: 2;
+      bottom: 42px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .entry__kicker {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 18px;
+      letter-spacing: 0;
+      margin-bottom: 22px;
+    }
+
+    .entry__menu a {
+      display: block;
+      font-size: clamp(50px, 3.4722222222vw, 66.667px);
+      line-height: clamp(44px, 3.0555555556vw, 58.667px);
+      letter-spacing: -3px;
+      text-transform: uppercase;
+    }
+
+    .intro {
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: clamp(18px, 1.6666666667vw, 32px) var(--grid-gap);
+      padding: clamp(148px, 10vw, 192px) var(--side) clamp(176px, 12.5vw, 240px);
+      background: var(--color-white);
+      color: var(--color-black);
+    }
+
+    .intro__copy {
+      grid-column: 2 / 7;
+      align-self: center;
+      padding-top: 24px;
+      padding-bottom: 24px;
+    }
+
+    .mono {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      margin-bottom: 28px;
+    }
+
+    .hero-title {
+      font-size: clamp(100px, 6.9444444444vw, 133.333px);
+      line-height: clamp(90px, 6.25vw, 120px);
+      letter-spacing: -6px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .abstract {
+      margin-top: 34px;
+      max-width: 680px;
+      font-size: clamp(30px, 2.0833333333vw, 40px);
+      line-height: clamp(36px, 2.5vw, 48px);
+      letter-spacing: -1.8px;
+    }
+
+    .intro__image {
+      grid-column: 8 / 13;
+      align-self: end;
+      aspect-ratio: 934 / 1204;
+      background: var(--color-silver);
+      overflow: hidden;
+    }
+
+    .tale-head {
+      background: var(--color-white);
+      color: var(--color-black);
+      padding: clamp(132px, 9.7222222222vw, 187px) var(--side) clamp(196px, 14.4444444444vw, 277px);
+    }
+
+    .tale-head__inner {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: clamp(18px, 1.6666666667vw, 32px) var(--grid-gap);
+      align-items: end;
+    }
+
+    .display-title {
+      grid-column: 1 / 13;
+      font-size: clamp(240px, 16.6666666667vw, 320px);
+      line-height: .82;
+      letter-spacing: -52.8px;
+      font-weight: 400;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 40px 0 120px;
+    }
+
+    .tale-head__image-main {
+      grid-column: 4 / 10;
+      aspect-ratio: 1920 / 1600;
+      overflow: hidden;
+    }
+
+    .tale-head__image-side {
+      grid-column: span 2;
+      aspect-ratio: 500 / 698;
+      overflow: hidden;
+    }
+
+    .lookbook {
+      background: var(--color-white);
+      color: var(--color-black);
+      padding: clamp(120px, 8.3333333333vw, 160px) var(--side) clamp(204px, 14.7222222222vw, 283px);
+    }
+
+    .lookbook__inner {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: clamp(18px, 1.6666666667vw, 32px) var(--grid-gap);
+      align-items: start;
+    }
+
+    .lookbook__text {
+      grid-column: 2 / 5;
+      padding-top: 112px;
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: -1.08px;
+    }
+
+    .lookbook__visual {
+      grid-column: 6 / 13;
+      aspect-ratio: 1610 / 2148;
+      overflow: hidden;
+    }
+
+    .product-overview {
+      position: relative;
+      min-height: 100svh;
+      background: var(--color-black);
+      color: var(--color-white);
+      overflow: hidden;
+    }
+
+    .product-overview img {
+      position: absolute;
+      inset: 0;
+      opacity: .82;
+    }
+
+    .product-overview__title {
+      position: sticky;
+      top: 46px;
+      z-index: 2;
+      text-align: center;
+      font-size: clamp(50px, 3.4722222222vw, 66.667px);
+      line-height: clamp(44px, 3.0555555556vw, 58.667px);
+      letter-spacing: -3px;
+      text-transform: uppercase;
+      font-weight: 400;
+      padding-top: 18px;
+    }
+
+    .product-overview__tags {
+      position: absolute;
+      left: 50%;
+      bottom: 72px;
+      z-index: 2;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--color-white);
+      color: var(--color-black);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 18px;
+      padding: 0 2px;
+      text-transform: uppercase;
+    }
+
+    .big-cta {
+      font-size: clamp(50px, 3.4722222222vw, 66.667px);
+      line-height: clamp(44px, 3.0555555556vw, 58.667px);
+      letter-spacing: -3px;
+      text-transform: uppercase;
+      background: var(--color-white);
+      color: var(--color-black);
+      padding: 0 2px;
+      margin-top: 22px;
+    }
+
+    .story {
+      background: var(--color-white);
+      color: var(--color-black);
+      padding: clamp(168px, 11.6666666667vw, 224px) 120px clamp(184px, 12.7777777778vw, 245px);
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: clamp(18px, 1.6666666667vw, 32px) var(--grid-gap);
+    }
+
+    .story__block {
+      grid-column: span 4;
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: -1.08px;
+    }
+
+    .story__block:first-child { grid-column: 2 / 6; }
+    .story__block:nth-child(2) { grid-column: 8 / 12; }
+
+
+    .brand-tale {
+      position: relative;
+      min-height: 520svh;
+      background: var(--color-black);
+      color: var(--color-black);
+      isolation: isolate;
+    }
+
+    .brand-tale__stage {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      overflow: hidden;
+      background: var(--color-black);
+    }
+
+    .brand-tale__bg,
+    .brand-tale__shade {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .brand-tale__bg {
+      object-fit: cover;
+      filter: grayscale(1) contrast(1.08) brightness(.72);
+      transform: scale(calc(1.05 - (var(--brand-progress, 0) * .025)));
+      transform-origin: 50% 50%;
+    }
+
+    .brand-tale__shade {
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(3, 3, 3, .18) 0%, rgba(3, 3, 3, .34) 52%, rgba(3, 3, 3, .72) 100%),
+        linear-gradient(90deg, rgba(3, 3, 3, .58) 0%, rgba(3, 3, 3, .1) 50%, rgba(3, 3, 3, .5) 100%);
+      pointer-events: none;
+    }
+
+    .brand-tale__panel {
+      position: absolute;
+      z-index: 2;
+      left: var(--side);
+      right: var(--side);
+      bottom: clamp(28px, 4.4444444444vw, 85px);
+      height: min(80svh, 700px);
+      min-height: 600px;
+      background: rgba(255, 255, 255, .94);
+      color: var(--color-black);
+      box-shadow: 0 42px 120px rgba(0, 0, 0, .34);
+      backdrop-filter: blur(2px);
+      overflow: hidden;
+      transform: translateY(calc((1 - var(--panel-in, 0)) * 96%));
+      opacity: calc(.15 + (var(--panel-in, 0) * .85));
+      will-change: transform, opacity;
+    }
+
+    .brand-tale__chapter {
+      position: absolute;
+      inset: clamp(30px, 3.6111111111vw, 69px);
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto auto 1fr;
+      gap: clamp(16px, 1.3888888889vw, 27px) var(--grid-gap);
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .48s var(--ease-out), transform .48s var(--ease-out);
+      pointer-events: none;
+    }
+
+    .brand-tale__chapter.is-active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .brand-tale__pre {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 18px;
+      text-transform: uppercase;
+    }
+
+    .brand-tale__title {
+      font-size: clamp(58px, 6.8vw, 130px);
+      line-height: .82;
+      letter-spacing: -8px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .brand-tale__abstract {
+      max-width: 660px;
+      font-size: clamp(18px, 1.25vw, 24px);
+      line-height: clamp(25px, 1.7361111111vw, 33px);
+      letter-spacing: -1px;
+    }
+
+    .brand-tale__visual {
+      overflow: hidden;
+      background: var(--color-silver);
+    }
+
+    .brand-tale__visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(1) contrast(1.06);
+    }
+
+    .brand-tale__meta {
+      display: grid;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 18px;
+      text-transform: uppercase;
+    }
+
+    .brand-tale__meta span {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      border-top: 1px solid currentColor;
+      padding-top: 8px;
+    }
+
+    .brand-tale__keywords {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      text-transform: uppercase;
+    }
+
+    .brand-tale__chapter--house .brand-tale__pre { grid-column: 1 / 4; }
+    .brand-tale__chapter--house .brand-tale__title { grid-column: 1 / 7; }
+    .brand-tale__chapter--house .brand-tale__abstract { grid-column: 1 / 6; }
+    .brand-tale__chapter--house .brand-tale__visual {
+      grid-column: 8 / 13;
+      grid-row: 1 / 4;
+      align-self: stretch;
+      aspect-ratio: 4 / 5;
+    }
+    .brand-tale__chapter--house .brand-tale__keywords {
+      grid-column: 6 / 13;
+      align-self: end;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px var(--grid-gap);
+      border-top: 1px solid currentColor;
+      padding-top: 18px;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 18px;
+    }
+    .brand-tale__chapter--house .brand-tale__keywords li {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-tale__chapter--order .brand-tale__pre { grid-column: 1 / 4; }
+    .brand-tale__chapter--order .brand-tale__title { grid-column: 1 / 6; grid-row: 2 / 4; align-self: center; }
+    .brand-tale__chapter--order .brand-tale__abstract { grid-column: 1 / 6; grid-row: 4; }
+    .brand-tale__axis {
+      grid-column: 7 / 13;
+      grid-row: 1 / 5;
+      align-self: stretch;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      min-height: 430px;
+    }
+
+    .brand-tale__axis li {
+      position: relative;
+      overflow: hidden;
+      min-height: 190px;
+      color: var(--color-white);
+      background: var(--color-black);
+    }
+
+    .brand-tale__axis img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 18%;
+      filter: grayscale(1) contrast(1.08) brightness(.72);
+      transform: scale(1);
+    }
+
+    .brand-tale__axis li::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(3, 3, 3, .08) 0%, rgba(3, 3, 3, .18) 42%, rgba(3, 3, 3, .82) 100%);
+      z-index: 1;
+    }
+
+    .brand-tale__axis-text {
+      position: absolute;
+      z-index: 2;
+      left: 18px;
+      right: 18px;
+      bottom: 14px;
+      display: grid;
+      gap: 5px;
+    }
+
+    .brand-tale__axis-text strong {
+      font-size: clamp(22px, 2.35vw, 42px);
+      line-height: .9;
+      letter-spacing: -2px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .brand-tale__axis-text span {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 16px;
+      text-transform: uppercase;
+    }
+
+    .brand-tale__chapter--galerie .brand-tale__pre { grid-column: 1 / 4; }
+    .brand-tale__chapter--galerie .brand-tale__title { grid-column: 1 / 6; }
+    .brand-tale__chapter--galerie .brand-tale__abstract { grid-column: 1 / 6; }
+    .brand-tale__chapter--galerie .brand-tale__visual {
+      grid-column: 6 / 9;
+      grid-row: 1 / 5;
+      align-self: stretch;
+      min-height: 430px;
+    }
+    .brand-tale__floor-list {
+      grid-column: 9 / 13;
+      grid-row: 1 / 5;
+      display: grid;
+      align-content: stretch;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid currentColor;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+    .brand-tale__floor-list li {
+      display: grid;
+      grid-template-columns: minmax(112px, auto) 1fr;
+      align-items: center;
+      gap: 18px;
+      border-bottom: 1px solid currentColor;
+      min-height: 25%;
+    }
+    .brand-tale__floor-list b {
+      font-size: clamp(26px, 2.85vw, 48px);
+      line-height: .9;
+      letter-spacing: -2px;
+      font-family: var(--font-sans);
+    }
+
+    .brand-tale__chapter--collection .brand-tale__pre { grid-column: 1 / 4; }
+    .brand-tale__chapter--collection .brand-tale__title { grid-column: 1 / 6; }
+    .brand-tale__chapter--collection .brand-tale__abstract { grid-column: 7 / 13; align-self: end; }
+    .brand-tale__archive-grid {
+      grid-column: 1 / 13;
+      display: grid;
+      grid-template-columns: 1.05fr .8fr 1.15fr;
+      gap: var(--grid-gap);
+      align-items: end;
+      list-style: none;
+      margin: clamp(18px, 2.2vw, 42px) 0 0;
+      padding: 0;
+    }
+    .brand-tale__archive-grid li {
+      min-height: 160px;
+      border-top: 1px solid currentColor;
+      padding-top: 12px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+    .brand-tale__archive-grid strong {
+      display: block;
+      margin-top: 18px;
+      font-family: var(--font-sans);
+      font-size: clamp(28px, 3.15vw, 56px);
+      line-height: .9;
+      letter-spacing: -3px;
+    }
+    .brand-tale__archive-grid img {
+      display: block;
+      width: 100%;
+      height: 76px;
+      margin-top: 10px;
+      object-fit: cover;
+      filter: grayscale(1) contrast(1.06);
+    }    .brand-tale__chapter--collection .brand-tale__title {
+      font-size: clamp(54px, 5.8vw, 112px);
+      letter-spacing: -6px;
+    }
+
+    .brand-tale__chapter--collection .brand-tale__abstract {
+      max-width: 640px;
+    }
+
+    .brand-tale__chapter--collection .brand-tale__archive-grid {
+      margin-top: clamp(12px, 1.4vw, 28px);
+      padding-bottom: 48px;
+    }
+
+    .brand-tale__chapter--collection .brand-tale__archive-grid li {
+      min-height: 136px;
+    }
+
+    .brand-tale__chapter--collection .brand-tale__archive-grid strong {
+      margin-top: 12px;
+      font-size: clamp(24px, 2.72vw, 48px);
+      line-height: .9;
+      letter-spacing: -2px;
+    }
+
+    .brand-tale__chapter--collection .brand-tale__archive-grid img {
+      height: 52px;
+      margin-top: 8px;
+    }
+
+    .brand-tale__nav {
+      position: absolute;
+      z-index: 4;
+      left: clamp(34px, 4.1666666667vw, 80px);
+      right: clamp(34px, 4.1666666667vw, 80px);
+      bottom: clamp(22px, 2.2222222222vw, 42px);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .brand-tale__dot {
+      height: 2px;
+      border: 0;
+      padding: 0;
+      background: rgba(3, 3, 3, .22);
+      pointer-events: auto;
+    }
+
+    .brand-tale__dot.is-active {
+      background: var(--color-black);
+    }
+    .gallery {
+      --gallery-x: 0px;
+      min-height: 320svh;
+      position: relative;
+      z-index: 6;
+      background: var(--color-white);
+      color: var(--color-black);
+    }
+
+    .gallery__sticky {
+      position: sticky;
+      z-index: 7;
+      top: 0;
+      height: 100svh;
+      padding: clamp(72px, 5vw, 96px) var(--side);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .gallery__title {
+      flex: 0 0 auto;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 18px;
+      text-transform: uppercase;
+      margin-bottom: clamp(24px, 2.2222222222vw, 38.222px);
+    }
+
+    .gallery__viewport {
+      position: relative;
+      z-index: 8;
+      width: 100%;
+      overflow: visible;
+    }
+
+    .gallery__wall {
+      position: relative;
+      z-index: 9;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: clamp(32px, 2.2222222222vw, 38.2222222222px);
+      width: max-content;
+      transform: translate3d(var(--gallery-x), 0, 0);
+      will-change: transform;
+    }
+
+    .gallery__item {
+      flex: 0 0 clamp(320px, 24vw, 460px);
+      margin: 0;
+      aspect-ratio: 1610 / 2148;
+      overflow: hidden;
+      background: var(--color-silver);
+    }
+
+    .outro {
+      min-height: 100svh;
+      position: relative;
+      background: var(--color-black);
+      color: var(--color-white);
+      padding: 20px var(--side) 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .outro__logo {
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: clamp(94px, 10.8vw, 208px);
+      line-height: .76;
+      letter-spacing: -9px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .outro__title {
+      font-size: clamp(100px, 6.9444444444vw, 133.333px);
+      line-height: clamp(90px, 6.25vw, 120px);
+      letter-spacing: -6px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .outro__links {
+      position: absolute;
+      left: var(--side);
+      right: var(--side);
+      bottom: 70px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(18px, 1.6666666667vw, 32px) var(--grid-gap);
+      text-align: left;
+    }
+
+    .outro__links a {
+      font-size: clamp(50px, 3.4722222222vw, 66.667px);
+      line-height: clamp(44px, 3.0555555556vw, 58.667px);
+      letter-spacing: -3px;
+      text-transform: uppercase;
+    }
+
+    .outro__links a:nth-child(2) { text-align: center; }
+    .outro__links a:nth-child(3) { text-align: right; }
+
+    @media (max-width: 900px) {
+      .topbar { padding: 18px 24px 0; }
+      .chapters { display: none; }
+      .entry__logo,
+      .outro__logo { font-size: 74px; letter-spacing: -5px; }
+      .entry__sound { top: 118px; white-space: nowrap; }
+      .entry__menu a,
+      .product-overview__title,
+      .big-cta,
+      .outro__links a {
+        font-size: 50px;
+        line-height: 44px;
+        letter-spacing: -3px;
+      }
+      .intro,
+      .story,
+      .lookbook__inner,
+      .tale-head__inner {
+        display: block;
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .hero-title,
+      .outro__title {
+        font-size: 50px;
+        line-height: 44px;
+        letter-spacing: -3px;
+      }
+      .abstract { font-size: 22px; line-height: 30px; letter-spacing: -1.32px; }
+      .intro { padding-top: 112px; padding-bottom: 136px; }
+      .tale-head { padding-top: 112px; padding-bottom: 152px; }
+      .lookbook { padding-top: 104px; padding-bottom: 144px; }
+      .intro__image,
+      .lookbook__visual,
+      .tale-head__image-main,
+      .tale-head__image-side {
+        margin-top: 48px;
+      }
+      .display-title {
+        font-size: 80px;
+        line-height: .9;
+        letter-spacing: -16px;
+        margin: 60px 0;
+      }
+      .brand-tale { min-height: 440svh; }
+      .brand-tale__panel { left: 24px; right: 24px; bottom: 34px; height: 78svh; min-height: 520px; overflow-y: auto; }
+      .brand-tale__chapter { display: block; inset: 28px 24px 64px; }
+      .brand-tale__title { font-size: 50px; line-height: .88; letter-spacing: -4px; margin: 28px 0 24px; }
+      .brand-tale__abstract { margin-top: 20px; font-size: 18px; line-height: 24px; letter-spacing: -1px; }
+      .brand-tale__visual { margin-top: 24px; aspect-ratio: 4 / 3; min-height: auto !important; }
+      .brand-tale__keywords,
+      .brand-tale__axis,
+      .brand-tale__floor-list,
+      .brand-tale__archive-grid { display: grid; grid-template-columns: 1fr; margin-top: 24px; gap: 10px; }
+      .brand-tale__axis { min-height: auto; border: 0; }
+      .brand-tale__axis li { min-height: 180px; }
+      .brand-tale__axis li,
+      .brand-tale__archive-grid strong { font-size: 28px; line-height: .94; letter-spacing: -1px; }
+      .brand-tale__floor-list li { min-height: 58px; }
+      .brand-tale__archive-grid li { min-height: auto; }
+      .brand-tale__archive-grid img { height: 120px; }
+      .brand-tale__nav { left: 24px; right: 24px; bottom: 24px; }
+      .story { padding-top: 120px; padding-bottom: 132px; }
+      .gallery { min-height: 300svh; }
+      .story__block + .story__block { margin-top: 64px; }
+      .gallery__sticky { padding: 72px 24px; }
+      .gallery__item { flex-basis: min(76vw, 360px); }
+      .lookbook__visual { margin-top: 0; }
+      .outro__links { display: block; bottom: 42px; }
+      .outro__links a { display: block; text-align: left !important; margin-top: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="site">
+    <header class="topbar" aria-label="Global navigation">
+      <span>POLYPTYCH RUNWAY</span>
+      <a href="#contact">CONTACT</a>
+    </header>
+
+    <nav class="chapters" aria-label="Chapter navigation">
+      <a href="#origin">POLYPTYCH</a>
+      <a href="#house">HOUSE</a>
+      <a href="#house">GALERIE</a>
+      <a href="#house">ARCHIVE</a>
+      <a href="#contact">CONTACT</a>
+    </nav>
+
+    <main>
+      <section class="entry" aria-label="SONGZIO entry">
+        <video class="entry__media" autoplay muted loop playsinline preload="metadata" poster="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_01.jpg" aria-hidden="true">
+          <source src="https://songzio24.cafe24.com/26ss_pfw.mp4" type="video/mp4">
+        </video>
+        <div class="entry__logo">SONGZIO</div>
+        <div class="entry__sound">[ POLYPTYCH / PARIS ]</div>
+        <div class="entry__menu">
+          <div class="entry__kicker">5 MOVEMENTS OF POLYPTYCH</div>
+          <a href="#origin">POLYPTYCH</a>
+          <a href="#house">HOUSE</a>
+          <a href="#house">GALERIE</a>
+          <a href="#house">ARCHIVE</a>
+          <a href="#collection">RUNWAY</a>
+        </div>
+      </section>
+
+      <section class="intro" id="origin">
+        <div class="intro__copy">
+          <span class="mono">[SONGZIO 26SS / THEATRE NATIONAL DE CHAILLOT]</span>
+          <h1 class="hero-title">POLYPTYCH<br>RUNWAY<br>GALERIE</h1>
+          <p class="abstract">Ancient forms fractured into future silhouettes. Hanbok, armor, shadow, and motion rebuilt as one black architecture.</p>
+        </div>
+        <figure class="intro__image">
+          <img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_02.jpg" alt="SONGZIO runway look in pale sculptural outerwear">
+        </figure>
+      </section>
+
+      <section class="tale-head" id="polyptych">
+        <div class="tale-head__inner">
+          <span class="mono">[MOVEMENT I]</span>
+          <h2 class="display-title">POLYPTYCH</h2>
+          <figure class="tale-head__image-side">
+            <img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_01.jpg" alt="SONGZIO runway silhouette">
+          </figure>
+          <figure class="tale-head__image-main">
+            <img src="https://www.songzio.com/web/upload/category/editor/2025/12/22/22365a4289ba6a456d7a9bbb20fdf939.jpg" alt="SONGZIO 26SS collection campaign image">
+          </figure>
+          <figure class="tale-head__image-side">
+            <img src="https://songzioofficial.cafe24.com/renewal/collection/26ss_man_03.jpg" alt="SONGZIO 26SS runway look">
+          </figure>
+        </div>
+      </section>
+
+      <section class="lookbook" id="runway">
+        <div class="lookbook__inner">
+          <div class="lookbook__text">
+            <span class="mono">[CUT / ARMOR]</span>
+            <p>Hanbok and western armor are cut into fragments, then rebuilt as asymmetric volume. The runway becomes a moving archive.</p>
+          </div>
+          <figure class="lookbook__visual">
+            <img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_03.jpg" alt="SONGZIO runway look with sculptural silhouette">
+          </figure>
+        </div>
+      </section>
+
+      <section class="product-overview" id="archive">
+        <img src="https://www.songzio.com/web/upload/category/editor/2025/12/22/b43f834a97e3ce48dcb2a14e4a07eddf.jpg" alt="SONGZIO full width collection visual">
+        <h2 class="product-overview__title">RUNWAY WALL</h2>
+        <div class="product-overview__tags">
+          <span class="tag">HANBOK / ARMOR</span>
+          <span class="tag">FRAGMENTED FORM</span>
+          <span class="tag">PARIS RUNWAY</span>
+          <a class="big-cta" href="#collection">ENTER COLLECTION</a>
+        </div>
+      </section>
+
+      <section class="story">
+        <article class="story__block">
+          <span class="mono">[FORM]</span>
+          <p>POLYPTYCH begins as connected panels. On the body, those panels become fracture, absence, and architectural shadow.</p>
+        </article>
+        <article class="story__block">
+          <span class="mono">[CUT]</span>
+          <p>The collection is seen before it is sold: image first, silhouette second, commerce only after the house has spoken.</p>
+        </article>
+      </section>
+
+      <section class="gallery" id="collection">
+        <div class="gallery__sticky">
+          <h2 class="gallery__title">[RUNWAY WALL]</h2>
+          <div class="gallery__viewport">
+            <div class="gallery__wall">
+              <figure class="gallery__item"><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_01.jpg" alt="SONGZIO runway look 01"></figure>
+              <figure class="gallery__item"><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_02.jpg" alt="SONGZIO runway look 02"></figure>
+              <figure class="gallery__item"><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_03.jpg" alt="SONGZIO runway look 03"></figure>
+              <figure class="gallery__item"><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_04.jpg" alt="SONGZIO runway look 04"></figure>
+              <figure class="gallery__item"><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_05.jpg" alt="SONGZIO runway look 05"></figure>
+              <figure class="gallery__item"><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_06.jpg" alt="SONGZIO runway look 06"></figure>
+              <figure class="gallery__item"><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_07.jpg" alt="SONGZIO runway look 07"></figure>
+              <figure class="gallery__item"><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_08.jpg" alt="SONGZIO runway look 08"></figure>
+              <figure class="gallery__item"><img src="https://songzioofficial.cafe24.com/renewal/collection/26ss_man_03.jpg" alt="SONGZIO runway look 09"></figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="brand-tale" id="house" aria-label="SONGZIO house and collection story">
+        <div class="brand-tale__stage">
+          <img class="brand-tale__bg" src="https://www.songzio.com/web/upload/category/editor/2025/12/22/22365a4289ba6a456d7a9bbb20fdf939.jpg" alt="SONGZIO black canvas collection image">
+          <div class="brand-tale__shade" aria-hidden="true"></div>
+          <article class="brand-tale__panel" aria-live="polite">
+            <section class="brand-tale__chapter brand-tale__chapter--house is-active" data-chapter="0">
+              <span class="brand-tale__pre">[HOUSE / PAINT ON BLACK]</span>
+              <h2 class="brand-tale__title">PAINT<br>ON<br>BLACK</h2>
+              <p class="brand-tale__abstract">Every SONGZIO collection begins on a black canvas. Vertical strokes hold the object; horizontal strokes hold emotion. The garment becomes the place where painting, body, and shadow collide.</p>
+              <figure class="brand-tale__visual">
+                <img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_01.jpg" alt="SONGZIO runway silhouette in black and white">
+              </figure>
+              <ul class="brand-tale__keywords" aria-label="House experience links">
+                <li><span>01</span> SONGZIO GROUP</li>
+                <li><span>02</span> SONGZIO ART</li>
+                <li><span>03</span> CROSSING STROKES</li>
+                <li><span>04</span> ORDER DISORDER</li>
+              </ul>
+            </section>
+
+            <section class="brand-tale__chapter brand-tale__chapter--order" data-chapter="1">
+              <span class="brand-tale__pre">[HOUSE / ORDER DISORDER]</span>
+              <h2 class="brand-tale__title">ORDER<br>DISORDER</h2>
+              <p class="brand-tale__abstract">The house is built on dualities: symmetry and asymmetry, light and darkness, curve and angle, restraint and rupture.</p>
+              <ul class="brand-tale__axis" aria-label="Order disorder opposing values">
+                <li>
+                  <img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_04.jpg" alt="SONGZIO symmetrical runway composition">
+                  <span class="brand-tale__axis-text"><strong>SYMMETRY</strong><span>Controlled structure and vertical order.</span></span>
+                </li>
+                <li>
+                  <img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_05.jpg" alt="SONGZIO asymmetric silhouette">
+                  <span class="brand-tale__axis-text"><strong>ASYMMETRY</strong><span>Disrupted balance across the body.</span></span>
+                </li>
+                <li>
+                  <img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_06.jpg" alt="SONGZIO light runway garment">
+                  <span class="brand-tale__axis-text"><strong>LIGHT</strong><span>Surface, volume, and exposed contour.</span></span>
+                </li>
+                <li>
+                  <img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_07.jpg" alt="SONGZIO shadowed runway garment">
+                  <span class="brand-tale__axis-text"><strong>SHADOW</strong><span>Black canvas, concealed motion, depth.</span></span>
+                </li>
+              </ul>
+            </section>
+
+            <section class="brand-tale__chapter brand-tale__chapter--galerie" data-chapter="2">
+              <span class="brand-tale__pre">[GALERIE NOIR / SEOUL FLAGSHIP]</span>
+              <h2 class="brand-tale__title">GALERIE<br>NOIR</h2>
+              <p class="brand-tale__abstract">A black museum where flagship store, contemporary gallery, painting, media art, and architecture gather around the house's creative process.</p>
+              <figure class="brand-tale__visual">
+                <img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_07.jpg" alt="SONGZIO dark gallery atmosphere">
+              </figure>
+              <ul class="brand-tale__floor-list" aria-label="Galerie Noir floors">
+                <li><b>B1</b><span>VAULT / ARCHIVE</span></li>
+                <li><b>1F</b><span>ATRIUM / FLAGSHIP</span></li>
+                <li><b>2F</b><span>GALLERY / ART</span></li>
+                <li><b>SEOUL</b><span>DOSAN PARK</span></li>
+              </ul>
+            </section>
+
+            <section class="brand-tale__chapter brand-tale__chapter--collection" data-chapter="3">
+              <span class="brand-tale__pre">[COLLECTION / ARCHIVE]</span>
+              <h2 class="brand-tale__title">PARIS<br>SEOUL<br>ARCHIVE</h2>
+              <p class="brand-tale__abstract">The collection menu becomes a house archive: Paris Fashion Week, Seoul Collection, campaigns, collaborations, editorials, and seasonal records.</p>
+              <ul class="brand-tale__archive-grid" aria-label="Collection archive index">
+                <li><span>2006</span><strong>PARIS<br>FASHION WEEK</strong><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_04.jpg" alt="SONGZIO runway archive look"></li>
+                <li><span>1993</span><strong>SEOUL<br>COLLECTION</strong><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_05.jpg" alt="SONGZIO Seoul collection look"></li>
+                <li><span>NOW</span><strong>CAMPAIGNS<br>EDITORIALS<br>ARCHIVE</strong><img src="https://songzioofficial.cafe24.com/renewal/collection/re_26ss_08.jpg" alt="SONGZIO archive campaign image"></li>
+              </ul>
+            </section>
+            <div class="brand-tale__nav" aria-label="Brand tale progress">
+              <button class="brand-tale__dot is-active" type="button" aria-label="Paint on Black"></button>
+              <button class="brand-tale__dot" type="button" aria-label="Order Disorder"></button>
+              <button class="brand-tale__dot" type="button" aria-label="Galerie Noir"></button>
+              <button class="brand-tale__dot" type="button" aria-label="Collection Archive"></button>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="outro" id="contact">
+        <div class="outro__logo">SONGZIO</div>
+        <h2 class="outro__title">THE HOUSE<br>BEGINS<br>IN BLACK.</h2>
+        <div class="outro__links">
+          <a href="https://www.songzio.com/" target="_blank" rel="noreferrer">OFFICIAL STORE</a>
+          <a href="https://www.songzio.com/collection/list1.html" target="_blank" rel="noreferrer">COLLECTION</a>
+          <a href="https://www.songzio.com/board/gallery/list.html" target="_blank" rel="noreferrer">GALERIE NOIR</a>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    (() => {
+      const section = document.querySelector('.brand-tale');
+      if (!section) return;
+
+      const stage = section.querySelector('.brand-tale__stage');
+      const panel = section.querySelector('.brand-tale__panel');
+      const chapters = [...section.querySelectorAll('.brand-tale__chapter')];
+      const dots = [...section.querySelectorAll('.brand-tale__dot')];
+      let active = 0;
+
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+      const setActive = (index) => {
+        if (index === active) return;
+        active = index;
+        chapters.forEach((chapter, chapterIndex) => chapter.classList.toggle('is-active', chapterIndex === active));
+        dots.forEach((dot, dotIndex) => dot.classList.toggle('is-active', dotIndex === active));
+      };
+
+      const update = () => {
+        const rect = section.getBoundingClientRect();
+        const scrollable = rect.height - window.innerHeight;
+        const progress = scrollable <= 0 ? 0 : clamp(-rect.top / scrollable, 0, 1);
+        const panelIn = clamp((progress - .08) / .2, 0, 1);
+        const chapterProgress = clamp((progress - .3) / .58, 0, .999);
+        const index = Math.min(chapters.length - 1, Math.floor(chapterProgress * chapters.length));
+
+        section.style.setProperty('--brand-progress', progress.toFixed(3));
+        panel.style.setProperty('--panel-in', panelIn.toFixed(3));
+        setActive(index);
+      };
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          const rect = section.getBoundingClientRect();
+          const scrollable = section.offsetHeight - window.innerHeight;
+          const targetProgress = .2 + ((index + .08) / chapters.length) * .68;
+          const target = window.scrollY + rect.top + (scrollable * targetProgress);
+          window.scrollTo({ top: target, behavior: 'smooth' });
+        });
+      });
+
+      update();
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+    })();
+
+    (() => {
+      const section = document.querySelector('.gallery');
+      if (!section) return;
+
+      const viewport = section.querySelector('.gallery__viewport');
+      const track = section.querySelector('.gallery__wall');
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+      const measure = () => {
+        const distance = Math.max(0, track.scrollWidth - viewport.clientWidth);
+        section.style.minHeight = `${window.innerHeight + distance}px`;
+        return distance;
+      };
+
+      const update = () => {
+        const distance = measure();
+        const rect = section.getBoundingClientRect();
+        const scrollable = section.offsetHeight - window.innerHeight;
+        const progress = scrollable <= 0 ? 0 : clamp(-rect.top / scrollable, 0, 1);
+        section.style.setProperty('--gallery-x', `${-(distance * progress).toFixed(2)}px`);
+      };
+
+      update();
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      window.addEventListener('load', update);
+    })();
+  </script>
+</body>
+</html>
